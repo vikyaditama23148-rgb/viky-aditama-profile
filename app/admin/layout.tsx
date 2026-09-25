@@ -25,6 +25,7 @@ export default async function AdminLayout({
             <Link href="/admin/achievements" className="hover:text-text-primary">Achievements</Link>
             <Link href="/admin/journey" className="hover:text-text-primary">Journey</Link>
             <Link href="/admin/skills" className="hover:text-text-primary">Skills</Link>
+            <Link href="/admin/resume" className="hover:text-text-primary">Resume</Link>
             <Link href="/admin/messages" className="hover:text-text-primary">Messages</Link>
           </nav>
           <span className="font-label-code text-label-code text-text-secondary">

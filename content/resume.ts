@@ -1,4 +1,4 @@
-export function getResumeHtml(profile: any) {
+export function getResumeHtml(profile: any, entries: any[] = []) {
   const name = profile?.full_name || "Viky Aditama, S.Pd.";
   const tagline = profile?.tagline || "Technologist, Researcher, Educator & Cultural Ambassador";
   const bio = profile?.bio || "Official dossier covering institutional executive leadership, empirical educational inquiry, and high-performance software artifacts.";
@@ -88,18 +88,19 @@ export function getResumeHtml(profile: any) {
 <span class="font-label-caps text-label-caps uppercase text-primary">Governance</span>
 </div>
 <div class="flex flex-col gap-space-lg pt-space-xs">
-<!-- Job 1 -->
+${entries.filter(e => e.section === 'Executive Leadership').map(e => `
 <div class="flex flex-col gap-space-xs pl-space-md relative">
 <div class="absolute left-0 top-1.5 bottom-0 w-0.5 bg-primary/40 rounded-full"></div>
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-<span class="font-body-lg text-body-lg text-text-primary font-semibold">Chief Executive Officer</span>
-<span class="font-label-code text-label-code text-primary bg-primary/10 px-2 py-0.5 rounded w-fit">2024 – PRESENT</span>
+<span class="font-body-lg text-body-lg text-text-primary font-semibold">${e.title}</span>
+<span class="font-label-code text-label-code text-primary bg-primary/10 px-2 py-0.5 rounded w-fit">${e.date_range}</span>
 </div>
-<span class="font-body-md text-body-md text-text-secondary">KEMUT Foundation (Yayasan Kemut Indonesia)</span>
+<span class="font-body-md text-body-md text-text-secondary">${e.organization}</span>
 <p class="font-body-sm text-body-sm text-on-surface-variant pt-1 leading-relaxed">
-                  Steering institutional governance, civic education programs, and philanthropic digital transformation initiatives across regional Madura. Orchestrating cross-functional teams spanning 4 municipal districts to establish localized open-access knowledge networks.
+                  ${e.description}
                 </p>
 </div>
+`).join('')}
 </div>
 </div>
 <!-- Section: Diplomatic & Cultural Mandates -->
@@ -114,16 +115,18 @@ export function getResumeHtml(profile: any) {
 <span class="font-label-caps text-label-caps uppercase text-secondary">Honors</span>
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-space-xs">
+${entries.filter(e => e.section === 'Diplomatic & Cultural Mandates').map((e, i) => `
 <div class="p-space-md rounded-lg bg-surface-elevated flex flex-col gap-space-xs">
 <div class="flex items-center justify-between">
-<span class="font-label-code text-label-code text-primary">MANDATE 01</span>
-<span class="font-label-code text-[11px] text-text-secondary">2024 – 2026</span>
+<span class="font-label-code text-label-code text-primary">${e.organization}</span>
+<span class="font-label-code text-[11px] text-text-secondary">${e.date_range}</span>
 </div>
-<h3 class="font-body-lg text-body-lg text-text-primary font-semibold">Duta Budaya Madura</h3>
+<h3 class="font-body-lg text-body-lg text-text-primary font-semibold">${e.title}</h3>
 <p class="font-body-sm text-body-sm text-text-secondary">
-                  Official Cultural Ambassador appointed for the preservation, contemporary articulation, and archival curation of indigenous Madurese heritage and oral linguistic frameworks.
+                  ${e.description}
                 </p>
 </div>
+`).join('')}
 </div>
 </div>
 </div>
@@ -139,16 +142,18 @@ export function getResumeHtml(profile: any) {
 <h2 class="font-headline-sm text-headline-sm text-text-primary tracking-tight">Academic Credentials</h2>
 </div>
 </div>
+${entries.filter(e => e.section === 'Academic Credentials').map(e => `
 <div class="p-space-md rounded-lg bg-surface-elevated flex flex-col gap-space-xs">
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-<span class="font-body-lg text-body-lg text-text-primary font-semibold">Bachelor of Education (S.Pd.)</span>
-<span class="font-label-code text-label-code text-primary bg-primary/10 px-2 py-0.5 rounded w-fit">Graduated with Highest Honors (Summa Cum Laude)</span>
+<span class="font-body-lg text-body-lg text-text-primary font-semibold">${e.title}</span>
+<span class="font-label-code text-label-code text-primary bg-primary/10 px-2 py-0.5 rounded w-fit">${e.date_range}</span>
 </div>
-<span class="font-body-md text-body-md text-text-secondary">Universitas PGRI Sumenep</span>
+<span class="font-body-md text-body-md text-text-secondary">${e.organization}</span>
 <p class="font-body-sm text-body-sm text-on-surface-variant pt-1 leading-relaxed">
-                Specialized in Pedagogical Epistemology, Educational Media Computation, and Dialectical Vernacular Curricula. Recognized as Valedictorian Candidate.
+                ${e.description}
               </p>
 </div>
+`).join('')}
 </div>
 </div>
 </section>

@@ -1,4 +1,12 @@
-export const html_home = `<div class="flex flex-col w-full">
+export function getHomeHtml(profile: any, projects: any[] = [], research: any[] = [], achievements: any[] = []) {
+  const firstName = profile?.full_name?.split(" ")[0] || "VIKY";
+  const lastName = profile?.full_name?.split(" ").slice(1).join(" ") || "ADITAMA";
+  const tagline = profile?.tagline || "Educator • Researcher • Technologist • Cultural Advocate";
+  const bio = profile?.bio || "Building meaningful experiences where culture, pedagogy, scientific inquiry, and scalable digital engineering converge into living digital architecture.";
+  const location = profile?.location || "Madura • ID";
+  const avatar = profile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuA9f4gVh7q3bvt34dyUemdlWR04xtiQOrYpH8GKk52Hh13xxHTk93aElGYvMfQ80drbOmw-xvf53Lb2DO8p93a6BLTSPOJ61kZ17CGT8zhj3XxNcdvUgnoISvbfQEQTMcTIjH63d4_eSNig6HEnyWN70b4oiJ5AhE-DTRxIHvVekjra-i1_wz9tH5wcMFBy7ZsYDjCoHGPPCGf2DYuVyymT737yK24SOmPtLh_IwvdXk1lIFh2CypJPUA";
+
+  return `<div class="flex flex-col w-full">
 <!-- SECTION 1: HERO SECTION -->
 <section class="relative w-full px-gutter lg:px-margin pt-12 pb-24 overflow-hidden">
 <!-- Atmospheric Ambient Backlights -->
@@ -17,22 +25,22 @@ export const html_home = `<div class="flex flex-col w-full">
 <!-- Editorial Name & Tagline -->
 <div class="flex flex-col space-y-space-xs">
 <h1 class="font-display-hero text-display-hero text-text-primary tracking-tighter uppercase font-bold leading-none select-none">
-            VIKY<br/>
-<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-fixed to-secondary-fixed-dim">ADITAMA</span>
+            ${firstName}<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-fixed to-secondary-fixed-dim">${lastName}</span>
 </h1>
 <p class="font-label-code text-label-code text-primary uppercase tracking-[0.2em] pt-2">
-            Educator • Researcher • Technologist • Cultural Advocate
+            ${tagline}
           </p>
 </div>
 <!-- Positioning Statement -->
 <p class="font-body-lg text-body-lg text-text-secondary max-w-xl">
-          Building meaningful experiences where culture, pedagogy, scientific inquiry, and scalable digital engineering converge into living digital architecture.
+          ${bio}
         </p>
 <!-- Meta Indices -->
 <div class="grid grid-cols-3 gap-space-md py-space-sm w-full max-w-lg">
 <div class="flex flex-col">
 <span class="font-label-code text-label-code text-text-secondary uppercase">Territory</span>
-<span class="font-headline-sm text-headline-sm text-text-primary">Madura • ID</span>
+<span class="font-headline-sm text-headline-sm text-text-primary">${location.split(',')[0] || location}</span>
 </div>
 <div class="flex flex-col">
 <span class="font-label-code text-label-code text-text-secondary uppercase">Initiatives</span>
@@ -65,7 +73,7 @@ export const html_home = `<div class="flex flex-col w-full">
 <div class="absolute -inset-4 bg-gradient-to-b from-primary/10 via-surface-elevated/40 to-transparent rounded-2xl blur-xl"></div>
 <div class="relative w-full max-w-md bg-surface-raised rounded-xl p-space-sm shadow-2xl">
 <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-base">
-<img class="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700" data-alt="Cinematic fine-art black and amber-lit portrait of Viky Aditama, an Indonesian intellectual educator and cultural advocate wearing refined modern traditional attire, soft directional champagne light illuminating facial features against a deep dark obsidian backdrop with subtle holographic geometric runes, high-fashion editorial styling, 8k resolution, Leica 85mm look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9f4gVh7q3bvt34dyUemdlWR04xtiQOrYpH8GKk52Hh13xxHTk93aElGYvMfQ80drbOmw-xvf53Lb2DO8p93a6BLTSPOJ61kZ17CGT8zhj3XxNcdvUgnoISvbfQEQTMcTIjH63d4_eSNig6HEnyWN70b4oiJ5AhE-DTRxIHvVekjra-i1_wz9tH5wcMFBy7ZsYDjCoHGPPCGf2DYuVyymT737yK24SOmPtLh_IwvdXk1lIFh2CypJPUA"/>
+<img class="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700" data-alt="Cinematic fine-art black and amber-lit portrait of Viky Aditama, an Indonesian intellectual educator and cultural advocate wearing refined modern traditional attire, soft directional champagne light illuminating facial features against a deep dark obsidian backdrop with subtle holographic geometric runes, high-fashion editorial styling, 8k resolution, Leica 85mm look" src="${avatar}"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface-base via-transparent to-transparent opacity-80"></div>
 <!-- Floating Holographic Data Widget -->
 <div class="absolute bottom-4 left-4 right-4 p-space-sm rounded-lg bg-surface-raised/90 backdrop-blur-md flex items-center justify-between shadow-lg">
@@ -212,96 +220,67 @@ export const html_home = `<div class="flex flex-col w-full">
 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
 </a>
 </div>
-<!-- Case 01: MADULINGO -->
+${projects.map((p, i) => {
+  const isEven = i % 2 !== 0;
+  return `
+<!-- Case ${i + 1}: ${p.title} -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center rounded-2xl bg-surface-elevated p-space-lg shadow-xl">
+${!isEven ? `
 <div class="lg:col-span-7 relative group rounded-xl overflow-hidden aspect-[16/10] bg-surface-base">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="High-fidelity interactive UI screen mockup of Madulingo language learning application, displaying rich gamified Madurese cultural motifs, traditional batik patterns overlaid with futuristic sleek typography, interactive phonetics waveform, vibrant champagne gold accents, obsidian backdrop, 3D character avatars with traditional peci and sarong" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Y_t0ckR7IMtIX-Oy_BN0w9nTJ_09HgIcRqecTbisD2G-_HCY3Mw0e9V6h5RTpO0zL2yKDw5LBOXAeLQUK1KLEX3HjbmgRrb5EIhUsd4ogN09YT1esqYcnWgkB2Dm2i_qDroeD8aXS8qKIdrNxsovh3ffzONBNPjp5Qn11Erac7grZSRA5gmr-S37boAZP7zT1ghEwibLzPBVWXX06nnUA6bg7JFm__8867qLk5zeZGxIbo5VuQHR3w"/>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${p.title}" src="${p.cover_image_url || ''}"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface-base/80 via-transparent to-transparent"></div>
 <div class="absolute top-4 left-4 px-3 py-1 rounded bg-surface-raised/90 backdrop-blur-md">
-<span class="font-label-caps text-label-caps text-primary tracking-wider uppercase">Culture × Linguistics</span>
+<span class="font-label-caps text-label-caps text-primary tracking-wider uppercase">${(p.tags || [])[0] || 'Project'}</span>
 </div>
 </div>
 <div class="lg:col-span-5 flex flex-col space-y-space-md">
+` : `
+<div class="lg:col-span-5 order-2 lg:order-1 flex flex-col space-y-space-md">
+`}
 <div class="flex items-center gap-space-sm">
-<span class="font-label-code text-label-code text-primary">CASE STUDY // 01</span>
+<span class="font-label-code text-label-code ${isEven ? 'text-secondary' : 'text-primary'}">CASE STUDY // 0${i + 1}</span>
 <span class="w-1.5 h-1.5 rounded-full bg-text-secondary"></span>
-<span class="font-label-code text-label-code text-text-secondary">ACTIVE PLATFORM</span>
+<span class="font-label-code text-label-code text-text-secondary">${p.year || ''}</span>
 </div>
-<h3 class="font-headline-md text-headline-md text-text-primary font-bold">MADULINGO</h3>
+<h3 class="font-headline-md text-headline-md text-text-primary font-bold">${p.title}</h3>
 <p class="font-body-md text-body-md text-text-secondary">
-            An indigenous pedagogical game and web portal engineered to protect, preserve, and instruct young generations in the nuances of the Madurese language and folklore through gamified interactive mechanics and speech recognition synthesis.
-          </p>
+  ${p.summary || p.description || ''}
+</p>
 <div class="flex flex-col space-y-space-xs text-sm">
 <div class="flex items-center justify-between py-1.5">
 <span class="font-label-code text-label-code text-text-secondary">Role</span>
-<span class="font-button-text text-button-text text-text-primary">Lead Architect &amp; Concept Creator</span>
+<span class="font-button-text text-button-text text-text-primary">${p.role || '-'}</span>
 </div>
 <div class="flex items-center justify-between py-1.5">
 <span class="font-label-code text-label-code text-text-secondary">Tech Stack</span>
-<span class="font-label-code text-label-code text-primary">Next.js • Tailwind • Web Audio API • Supabase</span>
-</div>
-<div class="flex items-center justify-between py-1.5">
-<span class="font-label-code text-label-code text-text-secondary">Cultural Validation</span>
-<span class="font-button-text text-button-text text-secondary">Majelis Adat Budaya Madura</span>
+<span class="font-label-code text-label-code ${isEven ? 'text-secondary' : 'text-primary'}">${(p.tech_stack || []).join(' • ')}</span>
 </div>
 </div>
 <div class="flex items-center gap-space-md pt-2">
-<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg bg-primary text-surface-base font-button-text text-button-text font-semibold hover:bg-primary-fixed transition-colors" href="#">
+<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg ${isEven ? 'bg-secondary hover:bg-secondary-fixed' : 'bg-primary hover:bg-primary-fixed'} text-surface-base font-button-text text-button-text font-semibold transition-colors" href="/work/${p.slug}">
 <span>View Case Study</span>
 <span class="material-symbols-outlined text-[16px]">visibility</span>
 </a>
-<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg bg-surface-raised text-text-primary font-button-text text-button-text hover:bg-surface-container-high transition-colors" href="#">
-<span>Launch Prototype</span>
+${p.external_url ? `
+<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg bg-surface-raised text-text-primary font-button-text text-button-text hover:bg-surface-container-high transition-colors" href="${p.external_url}" target="_blank">
+<span>Visit Project</span>
 <span class="material-symbols-outlined text-[16px] text-text-secondary">open_in_new</span>
 </a>
+` : ''}
 </div>
 </div>
-</div>
-<!-- Case 02: ASTROVA -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center rounded-2xl bg-surface-elevated p-space-lg shadow-xl">
-<div class="lg:col-span-5 order-2 lg:order-1 flex flex-col space-y-space-md">
-<div class="flex items-center gap-space-sm">
-<span class="font-label-code text-label-code text-secondary">CASE STUDY // 02</span>
-<span class="w-1.5 h-1.5 rounded-full bg-text-secondary"></span>
-<span class="font-label-code text-label-code text-text-secondary">3D SIMULATION</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-text-primary font-bold">ASTROVA</h3>
-<p class="font-body-md text-body-md text-text-secondary">
-            A next-generation astronomical web simulator bringing the solar system into high school and undergraduate classrooms. Features photorealistic celestial physics, orbital trajectories, and tactile 3D planetary rendering without native client installs.
-          </p>
-<div class="flex flex-col space-y-space-xs text-sm">
-<div class="flex items-center justify-between py-1.5">
-<span class="font-label-code text-label-code text-text-secondary">Role</span>
-<span class="font-button-text text-button-text text-text-primary">Full-Stack &amp; 3D Graphics Engineer</span>
-</div>
-<div class="flex items-center justify-between py-1.5">
-<span class="font-label-code text-label-code text-text-secondary">Tech Stack</span>
-<span class="font-label-code text-label-code text-secondary">Three.js • WebGL • GLSL Shaders • TypeScript</span>
-</div>
-<div class="flex items-center justify-between py-1.5">
-<span class="font-label-code text-label-code text-text-secondary">Pedagogical Reach</span>
-<span class="font-button-text text-button-text text-primary">Over 1,200 Active Students</span>
-</div>
-</div>
-<div class="flex items-center gap-space-md pt-2">
-<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg bg-surface-raised text-text-primary font-button-text text-button-text hover:bg-surface-container-high transition-colors" href="#">
-<span>Read Architecture</span>
-<span class="material-symbols-outlined text-[16px] text-text-secondary">article</span>
-</a>
-<a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-lg bg-secondary text-surface-base font-button-text text-button-text font-semibold hover:bg-secondary-fixed transition-colors" href="#">
-<span>Interactive Demo</span>
-<span class="material-symbols-outlined text-[16px]">public</span>
-</a>
-</div>
-</div>
+${isEven ? `
 <div class="lg:col-span-7 order-1 lg:order-2 relative group rounded-xl overflow-hidden aspect-[16/10] bg-surface-base">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Stunning 3D solar system visualization render from the Astrova project, featuring glowing ringed Saturn and high-detail orbital trails against an obsidian starfield, electric indigo atmospheric halos, futuristic data telemetry HUD overlays, hyper-realistic lighting and depth" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDav2Khn0tlvrgJG6rQE8DPA2ZICUYLY79d_CpZMaM1H9vEgN4rrVF3I4J4InTMeVytIBERyjpcJy_5zU9j3bVJNT6alafiQXFdS1kzmsMYbZ9bLk9dvpEZng8RTeHhIqzhNij2mFUbi026FbFZAUbMIkdNFGB0GGypKkUX9gkWpy-TK9JDp7-XQkfDbEphXyUwPmjKY5MB9D0waShA9ztWAMsH8Ufu05pMmC33pUA1WkwS3MVT7UHKZA"/>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${p.title}" src="${p.cover_image_url || ''}"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface-base/80 via-transparent to-transparent"></div>
 <div class="absolute top-4 right-4 px-3 py-1 rounded bg-surface-raised/90 backdrop-blur-md">
-<span class="font-label-caps text-label-caps text-secondary tracking-wider uppercase">Science × Spatial 3D</span>
+<span class="font-label-caps text-label-caps text-secondary tracking-wider uppercase">${(p.tags || [])[0] || 'Project'}</span>
 </div>
 </div>
+` : ''}
 </div>
+`;
+}).join('\n')}
 </div>
 </section>
 <!-- SECTION 5: JOURNEY PREVIEW & RESEARCH HIGHLIGHTS -->
@@ -317,54 +296,23 @@ export const html_home = `<div class="flex flex-col w-full">
           </p>
 </div>
 <div class="flex flex-col space-y-space-md">
-<!-- Item 01 -->
+${achievements.map((a, i) => `
 <div class="p-space-md rounded-xl bg-surface-raised shadow-md hover:bg-surface-elevated transition-colors flex items-start gap-space-md">
-<div class="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[20px]">military_tech</span>
+<div class="p-2.5 rounded-lg ${i % 2 === 0 ? 'bg-primary/10 text-primary' : 'bg-secondary/15 text-secondary'} shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">${a.icon || 'military_tech'}</span>
 </div>
 <div class="flex flex-col space-y-1">
 <div class="flex items-center gap-2">
-<span class="font-label-code text-label-code text-primary font-semibold">2024 – 2026</span>
-<span class="font-label-caps text-label-caps uppercase text-text-secondary">• REGIONAL HONOR</span>
+<span class="font-label-code text-label-code ${i % 2 === 0 ? 'text-primary' : 'text-secondary'} font-semibold">${a.date ? new Date(a.date).getFullYear() : ''}</span>
+<span class="font-label-caps text-label-caps uppercase text-text-secondary">• ${a.category || 'HONOR'}</span>
 </div>
-<h4 class="font-headline-sm text-headline-sm text-text-primary">Duta Budaya Madura</h4>
+<h4 class="font-headline-sm text-headline-sm text-text-primary">${a.title}</h4>
 <p class="font-body-sm text-body-sm text-text-secondary">
-                Selected as the foremost cultural titleholder for Madura, representing intangible cultural heritage preservation and digital cultural modernization.
+                ${a.description || ''}
               </p>
 </div>
 </div>
-<!-- Item 02 -->
-<div class="p-space-md rounded-xl bg-surface-raised shadow-md hover:bg-surface-elevated transition-colors flex items-start gap-space-md">
-<div class="p-2.5 rounded-lg bg-secondary/15 text-secondary shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[20px]">workspace_premium</span>
-</div>
-<div class="flex flex-col space-y-1">
-<div class="flex items-center gap-2">
-<span class="font-label-code text-label-code text-secondary font-semibold">2024</span>
-<span class="font-label-caps text-label-caps uppercase text-text-secondary">• CAMPUS MERIT</span>
-</div>
-<h4 class="font-headline-sm text-headline-sm text-text-primary">Duta Kampus Universitas PGRI Sumenep</h4>
-<p class="font-body-sm text-body-sm text-text-secondary">
-                Appointed university ambassador representing academic distinction, student research leadership, and institutional pedagogical transformation.
-              </p>
-</div>
-</div>
-<!-- Item 03 -->
-<div class="p-space-md rounded-xl bg-surface-raised shadow-md hover:bg-surface-elevated transition-colors flex items-start gap-space-md">
-<div class="p-2.5 rounded-lg bg-primary/10 text-primary shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
-</div>
-<div class="flex flex-col space-y-1">
-<div class="flex items-center gap-2">
-<span class="font-label-code text-label-code text-primary font-semibold">2023 – PRESENT</span>
-<span class="font-label-caps text-label-caps uppercase text-text-secondary">• EXECUTIVE DIRECT</span>
-</div>
-<h4 class="font-headline-sm text-headline-sm text-text-primary">CEO @ KEMUT Foundation &amp; News</h4>
-<p class="font-body-sm text-body-sm text-text-secondary">
-                Directing strategic philanthropy, regional journalism, digital learning bootcamps, and socio-economic incubation across eastern Java communities.
-              </p>
-</div>
-</div>
+`).join('\n')}
 </div>
 </div>
 <!-- Right: Research Publications & Scholarly Papers -->
@@ -377,46 +325,34 @@ export const html_home = `<div class="flex flex-col w-full">
           </p>
 </div>
 <div class="flex flex-col space-y-space-md">
-<!-- Research Paper 01 -->
+${research.map((r, i) => `
 <div class="p-space-lg rounded-xl bg-surface-raised shadow-md hover:bg-surface-elevated transition-colors flex flex-col space-y-space-sm">
 <div class="flex items-center justify-between">
-<span class="font-label-code text-label-code text-secondary">DOI: 10.31219/osf.io/va24r</span>
-<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-caps text-label-caps text-text-secondary uppercase">Peer-Reviewed</span>
+<span class="font-label-code text-label-code text-secondary">${r.doi ? 'DOI: ' + r.doi : r.category || 'Research'}</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-caps text-label-caps text-text-secondary uppercase">${r.category || 'Publication'}</span>
 </div>
 <h4 class="font-headline-sm text-headline-sm text-text-primary hover:text-primary transition-colors cursor-pointer">
-              Interactive Web Mechanics as Cognitive Anchors in Indigenous Language Acquisition
+              ${r.title}
             </h4>
 <p class="font-body-sm text-body-sm text-text-secondary">
-              Investigating the linguistic retention curves of second-tier dialect speakers when exposed to interactive micro-gamification models versus traditional flashcard paradigms.
+              ${r.abstract || ''}
             </p>
 <div class="flex items-center justify-between pt-2">
-<span class="font-label-code text-label-code text-text-secondary">Journal of Educational Innovation • 2024</span>
-<a class="inline-flex items-center gap-1 font-label-code text-label-code text-primary hover:underline" href="#">
+<span class="font-label-code text-label-code text-text-secondary">${r.journal || ''} • ${r.publication_date ? r.publication_date.split('-')[0] : ''}</span>
+${r.pdf_url ? `
+<a class="inline-flex items-center gap-1 font-label-code text-label-code text-primary hover:underline" href="${r.pdf_url}" target="_blank">
 <span>Read PDF</span>
 <span class="material-symbols-outlined text-[14px]">picture_as_pdf</span>
 </a>
-</div>
-</div>
-<!-- Research Paper 02 -->
-<div class="p-space-lg rounded-xl bg-surface-raised shadow-md hover:bg-surface-elevated transition-colors flex flex-col space-y-space-sm">
-<div class="flex items-center justify-between">
-<span class="font-label-code text-label-code text-secondary">DOI: 10.1016/j.compedu.2023</span>
-<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-caps text-label-caps text-text-secondary uppercase">Conference Proceedings</span>
-</div>
-<h4 class="font-headline-sm text-headline-sm text-text-primary hover:text-primary transition-colors cursor-pointer">
-              Spatial Three-Dimensional Renderings in Primary Astronomy Pedagogy
-            </h4>
-<p class="font-body-sm text-body-sm text-text-secondary">
-              A controlled empirical trial evaluating spatial aptitude growth among rural high school learners through WebGL-based planetary exploration environments.
-            </p>
-<div class="flex items-center justify-between pt-2">
-<span class="font-label-code text-label-code text-text-secondary">National Physics &amp; Technology Forum • 2023</span>
-<a class="inline-flex items-center gap-1 font-label-code text-label-code text-primary hover:underline" href="#">
-<span>Read PDF</span>
-<span class="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+` : r.external_url ? `
+<a class="inline-flex items-center gap-1 font-label-code text-label-code text-primary hover:underline" href="${r.external_url}" target="_blank">
+<span>Read Online</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
 </a>
+` : ''}
 </div>
 </div>
+`).join('\n')}
 </div>
 </div>
 </div>
@@ -518,3 +454,4 @@ export const html_home = `<div class="flex flex-col w-full">
 <!-- Interactive script for inline micro-interactions -->
 
 </div>`;
+}
