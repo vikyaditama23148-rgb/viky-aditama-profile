@@ -31,17 +31,25 @@ publishes educational research in academic journals. (Populate the
 ai_knowledge_base table via the admin dashboard for richer, up-to-date answers.)`;
 
   try {
-    const { answer } = await askViky(question, context);
+    const { answer, error } = await askViky(question, context);
 
-    await supabase.from("ai_chat_logs").insert({
-      session_id: sessionId || null,
-      question,
-      answer,
-    });
+    if (error) {
+      return NextResponse.json({ answer });
+    }
+
+    try {
+      await supabase.from("ai_chat_logs").insert({
+        session_id: sessionId || null,
+        question,
+        answer,
+      });
+    } catch (logErr) {
+      console.error("ai_chat_logs insert error:", logErr);
+    }
 
     return NextResponse.json({ answer });
   } catch (err) {
-    console.error("ai route error", err);
+    console.error("ai route error:", err);
     return NextResponse.json(
       { answer: "The assistant is temporarily unavailable. Please try again shortly." },
       { status: 200 }

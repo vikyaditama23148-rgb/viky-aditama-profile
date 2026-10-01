@@ -1,6 +1,6 @@
 /**
- * Minimal Gemini Flash client for the "Ask Viky AI" assistant.
- * No SDK dependency — plain fetch against the generative-language REST API.
+ * Minimal Gemini client for the "Ask Viky AI" assistant.
+ * Plain fetch against the generative-language REST API with automatic multi-model fallback.
  */
 
 const SYSTEM_PROMPT = `You are "Viky AI", the personal knowledge assistant embedded in Viky Aditama's
@@ -12,9 +12,16 @@ provided below. Be concise, warm, and professional. If the answer isn't in
 the context, say you don't have that information yet rather than inventing
 details.`;
 
+const FALLBACK_MODELS = [
+  "gemini-3.5-flash",
+  "gemini-3.6-flash",
+  "gemini-3.5-flash-lite",
+  "gemini-flash-lite-latest",
+  "gemini-3.8-flash",
+];
+
 export async function askViky(question: string, context: string) {
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL || "gemini-1.5-flash";
 
   if (!apiKey) {
     return {
@@ -24,35 +31,57 @@ export async function askViky(question: string, context: string) {
     };
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const configuredModel = process.env.GEMINI_MODEL;
+  const modelsToTry = [
+    ...(configuredModel ? [configuredModel] : []),
+    ...FALLBACK_MODELS,
+  ].filter((m, idx, arr) => arr.indexOf(m) === idx);
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [
+  let lastError: Error | null = null;
+
+  for (const model of modelsToTry) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
             {
-              text: `${SYSTEM_PROMPT}\n\n--- CONTEXT ---\n${context}\n\n--- QUESTION ---\n${question}`,
+              role: "user",
+              parts: [
+                {
+                  text: `${SYSTEM_PROMPT}\n\n--- CONTEXT ---\n${context}\n\n--- QUESTION ---\n${question}`,
+                },
+              ],
             },
           ],
-        },
-      ],
-      generationConfig: { temperature: 0.4, maxOutputTokens: 500 },
-    }),
-  });
+          generationConfig: { temperature: 0.4, maxOutputTokens: 500 },
+        }),
+      });
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Gemini API error (${res.status}): ${errText}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        console.warn(`Gemini model ${model} returned ${res.status}: ${errText}`);
+        lastError = new Error(`Gemini API error (${res.status}): ${errText}`);
+        continue;
+      }
+
+      const data = await res.json();
+      const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (answer) {
+        return { answer };
+      }
+    } catch (err: any) {
+      console.warn(`Error querying Gemini model ${model}:`, err?.message || err);
+      lastError = err instanceof Error ? err : new Error(String(err));
+    }
   }
 
-  const data = await res.json();
-  const answer =
-    data?.candidates?.[0]?.content?.parts?.[0]?.text ??
-    "I couldn't generate a response just now — please try again.";
-
-  return { answer };
+  throw (
+    lastError ||
+    new Error("All candidate Gemini models failed to generate content.")
+  );
 }
