@@ -13,9 +13,9 @@ the context, say you don't have that information yet rather than inventing
 details.`;
 
 const FALLBACK_MODELS = [
+  "gemini-3.5-flash-lite",
   "gemini-3.5-flash",
   "gemini-3.6-flash",
-  "gemini-3.5-flash-lite",
   "gemini-flash-lite-latest",
   "gemini-3.8-flash",
 ];
@@ -57,7 +57,7 @@ export async function askViky(question: string, context: string) {
               ],
             },
           ],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 500 },
+          generationConfig: { temperature: 0.4, maxOutputTokens: 2048 },
         }),
       });
 
@@ -69,11 +69,24 @@ export async function askViky(question: string, context: string) {
       }
 
       const data = await res.json();
-      const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      const textPart =
+        parts.find((p: any) => !p.thought && typeof p.text === "string" && p.text.trim()) ||
+        parts.find((p: any) => typeof p.text === "string" && p.text.trim());
+      const answer = textPart?.text;
 
-      if (answer) {
-        return { answer };
+      if (answer && answer.trim().length > 0) {
+        return { answer: answer.trim() };
       }
+
+      // Thinking models may consume tokens for reasoning, leaving
+      // content empty (finishReason: MAX_TOKENS with no text). Treat as
+      // a failure and try the next model.
+      console.warn(
+        `Gemini model ${model} returned empty content (finishReason: ${data?.candidates?.[0]?.finishReason})`
+      );
+      lastError = new Error(`Model ${model} returned empty content`);
+      continue;
     } catch (err: any) {
       console.warn(`Error querying Gemini model ${model}:`, err?.message || err);
       lastError = err instanceof Error ? err : new Error(String(err));
